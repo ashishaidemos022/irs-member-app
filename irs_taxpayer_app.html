@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>IRS — My Account</title>
+<style>
+:root{
+  --navy:#1b2f57;--navy-d:#12213f;--ink:#111a2b;--muted:#5b6b84;--bg:#eef1f7;--card:#fff;--line:#e3e8f1;
+  --accent:#2f6bb3;--accent-soft:#e9f0fa;--gold:#b4892f;--app-w:460px}
+*{box-sizing:border-box}html,body{margin:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+.app{max-width:var(--app-w);margin:0 auto;min-height:100vh;position:relative;overflow:hidden;background:var(--bg)}
+
+/* ---------- HOME ---------- */
+.view{min-height:100vh;padding-bottom:92px}
+.top{background:linear-gradient(150deg,var(--navy),var(--navy-d));color:#fff;padding:18px 20px 26px;border-radius:0 0 24px 24px;position:relative}
+.top:before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,var(--gold),#e5c576);border-radius:0}
+.brand{display:flex;align-items:center;justify-content:space-between}
+.brandL{display:flex;align-items:center;gap:10px}
+.seal{width:34px;height:34px;flex:0 0 auto}
+.logo{line-height:1}
+.logo .l1{font-weight:800;letter-spacing:1px;font-size:17px}
+.logo .l2{font-size:9.5px;letter-spacing:.6px;opacity:.8;text-transform:uppercase;margin-top:2px}
+.chip{background:rgba(255,255,255,.16);padding:6px 12px;border-radius:999px;font-size:12px;font-weight:600}
+.hello{font-size:24px;font-weight:700;margin-top:18px}
+.sub{opacity:.82;font-size:13px;margin-top:4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.sub .amt{font-weight:700;opacity:1}
+.wrap{padding:18px 16px}
+.h{font-size:12px;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);font-weight:700;margin:8px 4px 10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:12px;box-shadow:0 1px 2px rgba(17,26,43,.04)}
+.rt{font-weight:600;font-size:15px}
+.rs{color:var(--muted);font-size:12px;margin-top:3px}
+.pill{font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;white-space:nowrap}
+.p-amber{background:#FEF3D7;color:#9A6700}
+.p-blue{background:#E7EEFB;color:#2D52A8}
+.p-green{background:#DCF5E8;color:#0c7a55}
+.p-grey{background:#EEF0F0;color:#66726f}
+.p-orange{background:#FDE8D6;color:#B4530E}
+.chatcard{background:linear-gradient(150deg,var(--accent),#245089);color:#fff;border:none}
+.chatcard .rt{color:#fff}.chatcard .ctxt{opacity:.92;font-size:13px;margin:6px 0 14px;line-height:1.45}
+.btn{background:#fff;color:var(--accent);font-weight:700;border:none;border-radius:12px;padding:12px 18px;font-size:15px;cursor:pointer;width:100%}
+.foot{position:fixed;left:0;right:0;bottom:0;max-width:var(--app-w);margin:0 auto;background:#fff;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:10px 0 16px;z-index:5}
+.fab{position:fixed;bottom:84px;right:max(16px,calc(50% - var(--app-w)/2 + 16px));
+  width:58px;height:58px;border-radius:50%;border:none;cursor:pointer;z-index:6;
+  background:linear-gradient(150deg,var(--accent),#245089);color:#fff;
+  box-shadow:0 8px 20px rgba(47,107,179,.42);display:flex;align-items:center;justify-content:center}
+.fab svg{width:27px;height:27px;fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.fab .badge{position:absolute;top:0;right:0;width:14px;height:14px;border-radius:50%;background:#34d399;border:2px solid #fff}
+.fi{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--muted);font-size:11px;font-weight:600;cursor:pointer}
+.fi.active{color:var(--accent)}
+.dot{width:22px;height:22px;border-radius:7px;background:currentColor;opacity:.85}
+.skel{color:var(--muted);font-size:14px;padding:10px 4px}
+
+/* quick actions */
+.qa{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.qa .t{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 4px;display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;text-align:center}
+.qa .ic{width:38px;height:38px;border-radius:11px;background:var(--accent-soft);display:flex;align-items:center;justify-content:center}
+.qa .ic svg{width:20px;height:20px;fill:none;stroke:var(--accent);stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.qa .l{font-size:10.5px;font-weight:600;color:var(--ink);line-height:1.2}
+/* account summary */
+.acct .atop{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.acct .plan{font-weight:700;font-size:15px}
+.acct .badge2{font-size:11px;font-weight:700;color:#0c7a55;background:#DCF5E8;padding:4px 10px;border-radius:999px}
+.acct .crow{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-top:1px solid var(--line);font-size:13px}
+.acct .ck{color:var(--muted)}.acct .cv{font-weight:600}
+/* good to know */
+.kb{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:13px 15px;margin-bottom:10px;box-shadow:0 1px 2px rgba(17,26,43,.04)}
+.kb .kt{font-weight:600;font-size:14px;margin-bottom:4px}
+.kb .kp{color:var(--muted);font-size:12.5px;line-height:1.45}
+.kb .ktag{display:inline-block;margin-top:9px;font-size:10.5px;font-weight:700;color:var(--accent);background:var(--accent-soft);padding:3px 9px;border-radius:999px}
+.about .ap{color:var(--muted);font-size:12.5px;line-height:1.5;margin-top:5px}
+
+/* ---------- EXPANDABLE CASE CARDS ---------- */
+.card.req{display:block;cursor:default}
+.reqhead{display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer}
+.reqmain{min-width:0}
+.reqright{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.caret{color:var(--muted);font-size:12px;transition:transform .2s ease}
+.caret.up{transform:rotate(180deg)}
+.reqbody{margin-top:12px;border-top:1px solid var(--line);padding-top:12px;animation:fade .2s ease}
+@keyframes fade{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
+/* detail boxes */
+.box{border:1px solid var(--line);border-radius:12px;padding:11px 13px;margin-bottom:11px;background:#fbfcfe}
+.box.warn{border-color:#F0D9A6;background:#FFF8EC}
+.box.pay{border-color:#CBDBEF;background:#F2F7FC}
+.bx-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}
+.bx-t{font-weight:700;font-size:13px;color:var(--navy)}
+.box.warn .bx-t{color:#8A560F}
+.bx-s{font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px}
+.bx-r{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;padding:3px 0;color:var(--muted)}
+.bx-r b{color:var(--ink);font-weight:600;text-align:right}
+.bx-cta{margin-top:9px;width:100%;background:var(--accent);color:#fff;border:none;border-radius:10px;padding:10px;font-size:13px;font-weight:700;cursor:pointer}
+.bx-note{margin-top:8px;padding-top:8px;border-top:1px dashed #d9e2ef;font-size:12px;color:#4a5c78;line-height:1.45}
+/* document checklist */
+.doc{display:flex;align-items:center;gap:9px;padding:6px 0;font-size:12.5px}
+.doc .di{width:18px;height:18px;border-radius:50%;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff}
+.doc .di.ok{background:#0c7a55}.doc .di.no{background:#B4530E}
+.doc .dn{flex:1 1 auto}.doc .dnn{font-weight:600;color:var(--ink)}
+.doc .dst{font-size:10.5px;font-weight:700}
+.doc .dst.ok{color:#0c7a55}.doc .dst.no{color:#B4530E}
+/* timeline */
+.tl-h{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:700;margin:2px 0 10px}
+.tlrow{display:flex;gap:10px}
+.tldot{width:9px;height:9px;border-radius:50%;margin-top:5px;flex:0 0 auto}
+.tlbody{padding-bottom:12px;min-width:0}
+.tlrow:last-child .tlbody{padding-bottom:0}
+.tlhd{font-weight:600;font-size:12.5px}
+.tlsum{font-size:12.5px;color:#3c4a60;margin-top:1px;line-height:1.45}
+.tltime{font-size:10.5px;color:var(--muted);margin-top:3px;font-variant-numeric:tabular-nums}
+.tl-empty{font-size:12.5px;color:var(--muted)}
+
+/* ---------- CHAT SCREEN ---------- */
+#chatView{position:fixed;top:0;left:50%;width:100%;max-width:var(--app-w);
+  height:100vh;height:100dvh;overflow:hidden;background:#f5f7fb;display:flex;flex-direction:column;
+  transform:translate(-50%,100%);transition:transform .28s cubic-bezier(.4,0,.2,1);z-index:20;visibility:hidden}
+#chatView.open{transform:translate(-50%,0);visibility:visible}
+.chead{background:linear-gradient(150deg,var(--navy),var(--navy-d));color:#fff;
+  padding:14px 14px;display:flex;align-items:center;gap:12px;flex:0 0 auto}
+.cback{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;background:rgba(255,255,255,.14);flex:0 0 auto}
+.cback svg{width:18px;height:18px;stroke:#fff;stroke-width:2.4;fill:none}
+.cav{width:40px;height:40px;border-radius:50%;background:#fff;color:var(--navy);font-weight:800;
+  display:flex;align-items:center;justify-content:center;font-size:14px;position:relative;flex:0 0 auto}
+.cav .on{position:absolute;right:-1px;bottom:-1px;width:11px;height:11px;border-radius:50%;background:#34d399;border:2px solid var(--navy-d)}
+.cmeta{line-height:1.25}
+.cname{font-weight:700;font-size:15px}
+.cstat{font-size:11.5px;opacity:.88;display:flex;align-items:center;gap:5px}
+.cbody{flex:1 1 auto;position:relative;overflow:hidden}
+#chatBody #tdWebchat{position:absolute!important;inset:0!important;width:100%!important;height:100%!important}
+#chatBody #tdWebchat > *,
+#chatBody #tdWebchat [class*="webchat" i],
+#chatBody #tdWebchat [class*="window" i],
+#chatBody #tdWebchat [class*="wrapper" i],
+#chatBody #tdWebchat [class*="-root" i],
+#chatBody #tdWebchat [class*="Root"],
+#chatBody #tdWebchat [class*="widget" i]{
+  position:absolute!important;inset:0!important;width:100%!important;height:100%!important;
+  max-width:100%!important;max-height:100%!important;min-width:0!important;min-height:100%!important;
+  margin:0!important;top:auto!important;left:auto!important;right:auto!important;bottom:auto!important;
+  border-radius:0!important;box-shadow:none!important;transform:none!important}
+#chatBody #tdWebchat iframe{width:100%!important;height:100%!important;border:0!important;border-radius:0!important}
+[class*="launcher" i],[class*="Launcher"],[data-td-launcher],
+#chatBody #tdWebchat [class*="bubble" i]{display:none!important}
+.notice{border-left:4px solid var(--gold)}
+.notice .ntop{display:flex;gap:12px;align-items:flex-start}
+.notice .nbell{font-size:22px;line-height:1}
+.notice .nmain{min-width:0}
+.notice .np{color:var(--muted);font-size:13px;line-height:1.5;margin-top:5px}
+.notice .nbtn{margin-top:14px;background:var(--accent);color:#fff}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- HOME -->
+  <div class="view" id="home">
+    <div class="top">
+      <div class="brand">
+        <div class="brandL">
+          <svg class="seal" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="18.5" stroke="#e5c576" stroke-width="1.5"/><path d="M20 8l9 4v6c0 6-4 10-9 12-5-2-9-6-9-12v-6l9-4z" fill="rgba(255,255,255,.10)" stroke="#e5c576" stroke-width="1.3"/><path d="M15 20l3.2 3.2L26 15" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div class="logo"><div class="l1">IRS</div><div class="l2">Internal Revenue Service</div></div>
+        </div>
+        <div class="chip" id="chip">…</div>
+      </div>
+      <div class="hello" id="hello">Welcome</div>
+      <div class="sub" id="subline">Your federal tax account</div>
+    </div>
+    <div class="wrap">
+      <div class="h" id="mattersH">Your open matters</div>
+      <div id="reqs"><div class="skel">Loading your account…</div></div>
+
+      <div class="h">Quick actions</div>
+      <div class="qa">
+        <div class="t" onclick="openChat()">
+          <div class="ic"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"></rect><path d="M2 10h20"></path></svg></div>
+          <div class="l">Make a payment</div>
+        </div>
+        <div class="t" onclick="openChat()">
+          <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 16V4"></path><path d="M8 8l4-4 4 4"></path><path d="M4 20h16"></path></svg></div>
+          <div class="l">Upload document</div>
+        </div>
+        <div class="t" onclick="openChat()">
+          <div class="ic"><svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h12"></path></svg></div>
+          <div class="l">Payment plan</div>
+        </div>
+        <div class="t" onclick="openChat()">
+          <div class="ic"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path></svg></div>
+          <div class="l">Notices</div>
+        </div>
+      </div>
+
+      <div class="h">Account</div>
+      <div class="card acct" id="acct"><div class="skel">Loading…</div></div>
+
+      <div class="h">Good to know</div>
+      <div id="kb"><div class="skel">Loading…</div></div>
+
+      <div class="h">Need help?</div>
+      <div class="card chatcard">
+        <div class="rt">Chat with the IRS</div>
+        <div class="ctxt">Ask about a notice, a balance, a payment plan, or submitting documents — your account is already verified.</div>
+        <button class="btn" id="chatBtn" onclick="openChat()">Start a chat</button>
+      </div>
+
+      <div class="card about">
+        <div class="rt">Secure online account</div>
+        <div class="ap">This is a demonstration of an IRS taxpayer self-service experience. All taxpayer data shown is synthetic. Never share your full Social Security number in chat.</div>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="fi active"><div class="dot"></div>Home</div>
+      <div class="fi"><div class="dot"></div>Notices</div>
+      <div class="fi" onclick="openChat()"><div class="dot"></div>Chat</div>
+      <div class="fi"><div class="dot"></div>Profile</div>
+    </div>
+  </div>
+
+  <!-- CHAT -->
+  <div id="chatView">
+    <div class="chead">
+      <div class="cback" onclick="closeChat()" aria-label="Back">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </div>
+      <div class="cav">IRS<span class="on"></span></div>
+      <div class="cmeta">
+        <div class="cname">IRS Assistant</div>
+        <div class="cstat">Online · your account is verified</div>
+      </div>
+    </div>
+    <div class="cbody" id="chatBody"></div>
+  </div>
+
+  <button class="fab" onclick="openChat()" aria-label="Chat with the IRS">
+    <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 17 0z"></path></svg>
+    <span class="badge"></span>
+  </button>
+
+</div>
+
+<script>
+var SUPA="https://mnrseaapxpofdznnqrsv.supabase.co";
+var ANON="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1ucnNlYWFweHBvZmR6bm5xcnN2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI1MjIyNzUsImV4cCI6MjA2ODA5ODI3NX0.TgUoEQKHbasSkk9b7gDXRsQTPY5m6COOSFRlO8h-Xe0";
+var TP_FALLBACK="3a0bf987389f4098a6da8a5d45dee737";       // Talkdesk chat touchpoint (swap for the IRS touchpoint)
+var TAXPAYER_REF="IRS-DEMO-4827";
+var H={apikey:ANON,Authorization:"Bearer "+ANON};
+var me=null, chatReady=false;
+var cases=[], noticeById={}, planByCase={}, docsByCase={}, intByCase={}, allInts=[], expanded={}, autoExpanded=false;
+var LIVE_CH=['VOICE','CHAT','EMAIL'];
+function caseEngaged(id){ return (intByCase[id]||[]).some(function(i){return LIVE_CH.indexOf(i.channel)>=0;}); }
+function engagedNow(){ return cases.some(function(c){return caseEngaged(c.id);}); }
+
+var CTYPE={BALANCE_DUE_RESOLUTION:"Balance due",NOTICE_DOCUMENT_REVIEW:"Document review",REFUND_HOLD:"Refund",IDENTITY_VERIFICATION:"Identity verification"};
+var CSTAT={OPEN:["Open","amber"],DOCUMENTS_NEEDED:["Documents needed","orange"],IN_REVIEW:["In review","blue"],
+  ARRANGED:["Payment plan set","green"],RESOLVED:["Resolved","green"],CLOSED:["Closed","grey"]};
+var EVL={NOTICE_ISSUED:"Notice issued",NOTICE_VIEWED:"Notice viewed",DOCUMENT_REMINDER:"Document reminder",
+  DOCUMENT_SUBMITTED:"Document submitted",DOCUMENT_RECEIVED:"Document received",PAYMENT_PLAN_PROPOSED:"Payment plan proposed",
+  PAYMENT_PLAN_ACTIVATED:"Payment plan activated",CALL_HANDLED:"Phone call",CHAT_HANDLED:"Chat",CASE_UPDATED:"Case updated"};
+var CHL={WEB:"Online",SECURE_MESSAGE:"Secure message",VOICE:"Phone",CHAT:"Chat",EMAIL:"Email",SYSTEM:"System",MAIL:"Mail"};
+var CHC={WEB:"#2f6bb3",SECURE_MESSAGE:"#6B5BB5",VOICE:"#C2791C",CHAT:"#2E8B57",EMAIL:"#2D6DA8",SYSTEM:"#94a3b8",MAIL:"#8a8f98"};
+
+function esc(s){return String(s==null?"":s).replace(/[&<>]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;"}[c];});}
+function money(n){return "$"+Number(n||0).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});}
+function fmtD(s){if(!s)return"";var d=new Date(s);return d.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' · '+d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});}
+function fmtDate(s){if(!s)return"—";var d=new Date(s);return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}
+function pill(txt,cls){return '<span class="pill p-'+cls+'">'+esc(txt)+'</span>';}
+
+function noticeBox(n){
+  if(!n) return "";
+  var amt=(n.balance_due&&Number(n.balance_due)>0)?money(n.balance_due):null;
+  var refund=(n.refund_amount&&Number(n.refund_amount)>0)?money(n.refund_amount):null;
+  return '<div class="box'+(refund?' pay':'')+'"><div class="bx-h"><span class="bx-t">Notice '+esc(n.notice_number)+'</span></div>'+
+    '<div class="bx-r"><span>Type</span><b>'+esc(n.notice_type)+'</b></div>'+
+    '<div class="bx-r"><span>Tax year</span><b>'+esc(n.tax_year)+'</b></div>'+
+    (amt?'<div class="bx-r"><span>Balance</span><b>'+amt+'</b></div>':'')+
+    (refund?'<div class="bx-r"><span>Refund</span><b>'+refund+'</b></div>':'')+
+    (n.response_due_date?'<div class="bx-r"><span>Respond by</span><b>'+fmtDate(n.response_due_date)+'</b></div>':'')+
+    (n.summary?'<div class="bx-note">'+esc(n.summary)+'</div>':'')+'</div>';
+}
+function planBox(p){
+  if(!p) return "";
+  var active=(p.status==='ACTIVE'||p.status==='ACTIVATED');
+  return '<div class="box pay"><div class="bx-h"><span class="bx-t">Payment plan</span>'+
+    '<span class="bx-s '+(active?'p-green':'p-blue')+'">'+(active?'Active':'Proposed')+'</span></div>'+
+    '<div class="bx-r"><span>Monthly</span><b>'+money(p.monthly_amount)+' × '+esc(p.term_months)+' mo</b></div>'+
+    '<div class="bx-r"><span>First payment</span><b>'+fmtDate(p.first_payment_date)+'</b></div>'+
+    (active?'':'<button class="bx-cta" onclick="openChat()">Review &amp; set up this plan</button>')+'</div>';
+}
+function docsBox(list){
+  if(!list||!list.length) return "";
+  var rows=list.map(function(d){
+    var ok=(d.status==='RECEIVED');
+    return '<div class="doc"><div class="di '+(ok?'ok':'no')+'">'+(ok?'✓':'!')+'</div>'+
+      '<div class="dn"><span class="dnn">'+esc(d.document_name)+'</span></div>'+
+      '<div class="dst '+(ok?'ok':'no')+'">'+(ok?'Received':'Needed')+'</div></div>';
+  }).join("");
+  return '<div class="box warn"><div class="bx-h"><span class="bx-t">Documents</span></div>'+rows+
+    '<div class="bx-note">Upload the items marked “Needed” to complete your response. <b>Start a chat</b> to submit securely.</div></div>';
+}
+function timeline(list){
+  if(!list||!list.length) return '<div class="tl-empty">No activity on this matter yet.</div>';
+  return '<div class="tl-h">Activity on this matter</div>'+list.map(function(n){
+    var lab=EVL[n.event_type]||n.event_type;
+    return '<div class="tlrow"><div class="tldot" style="background:'+(CHC[n.channel]||'#94a3b8')+'"></div>'+
+      '<div class="tlbody"><div class="tlhd">'+esc(lab)+' · '+esc(CHL[n.channel]||n.channel||'—')+'</div>'+
+      '<div class="tlsum">'+esc((n.outcome||'').toLowerCase().replace(/_/g,' '))+'</div>'+
+      '<div class="tltime">'+fmtD(n.created_at)+'</div></div></div>';
+  }).join("");
+}
+function toggleCase(id){expanded[id]=!expanded[id];renderCases();}
+
+function renderMatters(){
+  var h=document.getElementById("mattersH");
+  if(engagedNow()){ if(h) h.textContent="Your open matters"; renderCases(); }
+  else { if(h) h.textContent="Notices"; noticeTeaser(); }
+}
+function noticeTeaser(){
+  var el=document.getElementById("reqs");
+  var bd=null; for(var k in noticeById){ if(Number(noticeById[k].balance_due||0)>0){bd=noticeById[k];break;} }
+  var hasNotice=Object.keys(noticeById).length>0;
+  if(!hasNotice){ el.innerHTML='<div class="skel">You have no notices right now. You are all set.</div>'; return; }
+  var title=bd?('Notice '+esc(bd.notice_number)+' · Balance due'):'You have a notice from the IRS';
+  var msg=bd
+    ?('The IRS has sent you a balance-due notice for tax year '+esc(bd.tax_year||'')+'. Call the number on your notice or start a chat to hear the amount and your options.')
+    :'The IRS has sent you a notice about your account. Call or start a chat to review the details.';
+  el.innerHTML='<div class="card notice"><div class="ntop"><div class="nbell">📬</div><div class="nmain">'+
+    '<div class="rt">'+title+'</div><div class="np">'+msg+'</div></div></div>'+
+    '<button class="btn nbtn" onclick="openChat()">Review with the IRS</button></div>';
+}
+
+function renderCases(){
+  var el=document.getElementById("reqs");
+  var shown=cases.filter(function(c){return caseEngaged(c.id);});
+  if(!shown.length){el.innerHTML='<div class="skel">No open matters. You are all set.</div>';return;}
+  el.innerHTML=shown.map(function(c){
+    var t=CTYPE[c.case_type]||c.case_type;
+    var st=CSTAT[c.status]||[c.status,"grey"];
+    var n=noticeById[c.notice_id];
+    var sub=c.case_number+(n?(' · '+n.notice_number):'');
+    var isOpen=!!expanded[c.id];
+    var head='<div class="reqhead" onclick="toggleCase(\''+c.id+'\')">'+
+        '<div class="reqmain"><div class="rt">'+esc(t)+'</div><div class="rs">'+esc(sub)+'</div></div>'+
+        '<div class="reqright">'+pill(st[0],st[1])+'<span class="caret '+(isOpen?'up':'')+'">▾</span></div></div>';
+    var body="";
+    if(isOpen){
+      body='<div class="reqbody">'+
+        noticeBox(n)+
+        planBox(planByCase[c.id])+
+        docsBox(docsByCase[c.id])+
+        (c.next_action?'<div class="box"><div class="bx-t" style="margin-bottom:5px">Next step</div><div class="bx-note" style="border:0;padding:0;margin:0">'+esc(c.next_action)+'</div></div>':'')+
+        timeline(intByCase[c.id]||[])+'</div>';
+    }
+    return '<div class="card req">'+head+body+'</div>';
+  }).join("");
+}
+
+function renderAcct(){
+  var el=document.getElementById("acct");
+  var verified=(me.identity_status==='VERIFIED');
+  el.innerHTML='<div class="atop"><div class="plan">Individual taxpayer</div>'+
+    '<span class="badge2">'+(verified?'Identity verified':esc(me.identity_status||''))+'</span></div>'+
+    '<div class="crow"><span class="ck">Reference</span><span class="cv">'+esc(me.taxpayer_reference||'—')+'</span></div>'+
+    '<div class="crow"><span class="ck">SSN on file</span><span class="cv">•••-••-'+esc(me.tin_last4||'••••')+'</span></div>'+
+    '<div class="crow"><span class="ck">ZIP</span><span class="cv">'+esc(me.mailing_zip||'—')+'</span></div>';
+}
+function renderKb(arts){
+  var el=document.getElementById("kb");
+  if(!arts||!arts.length){el.innerHTML='<div class="skel">Nothing new right now.</div>';return;}
+  el.innerHTML=arts.map(function(a){
+    var body=(a.body||""); var prev=body.slice(0,130)+(body.length>130?"…":"");
+    var tag=(a.tags||"").split(",")[0].trim();
+    return '<div class="kb"><div class="kt">'+esc(a.title)+'</div><div class="kp">'+esc(prev)+'</div>'+(tag?'<span class="ktag">'+esc(tag)+'</span>':'')+'</div>';
+  }).join("");
+}
+
+function totalBalance(){
+  var t=0; for(var k in noticeById){ t+=Number(noticeById[k].balance_due||0); } return t;
+}
+function renderHeader(){
+  document.getElementById("hello").textContent="Hi, "+(me.first_name||"");
+  document.getElementById("chip").textContent=(me.first_name||"")+" "+((me.last_name||" ").charAt(0))+". · "+(me.taxpayer_reference||"");
+  var sl=document.getElementById("subline");
+  if(engagedNow()){
+    var bal=totalBalance(); var openN=cases.length;
+    sl.innerHTML=(openN?(openN+' open matter'+(openN>1?'s':'')):'No open matters')+
+      (bal>0?(' · <span class="amt">'+money(bal)+' balance</span>'):'');
+  } else {
+    var hasNotice=Object.keys(noticeById).length>0;
+    sl.innerHTML=hasNotice?'You have a notice to review':'Your federal tax account';
+  }
+}
+
+function loadKb(){
+  fetch(SUPA+"/rest/v1/irs_kb_articles?select=title,body,tags&order=created_at.desc&limit=3",{headers:H})
+    .then(function(r){return r.json();}).then(renderKb).catch(function(){document.getElementById("kb").innerHTML='';});
+}
+function refresh(){
+  if(!me||!me.id) return;
+  Promise.all([
+    fetch(SUPA+"/rest/v1/irs_resolution_cases?taxpayer_id=eq."+me.id+"&select=*&order=created_at.asc",{headers:H}).then(function(r){return r.json();}),
+    fetch(SUPA+"/rest/v1/irs_notices?taxpayer_id=eq."+me.id+"&select=*",{headers:H}).then(function(r){return r.json();}),
+    fetch(SUPA+"/rest/v1/irs_payment_plans?taxpayer_id=eq."+me.id+"&select=*",{headers:H}).then(function(r){return r.json();}),
+    fetch(SUPA+"/rest/v1/irs_interactions?taxpayer_id=eq."+me.id+"&select=*&order=created_at.asc",{headers:H}).then(function(r){return r.json();})
+  ]).then(function(res){
+    cases=res[0]||[];
+    noticeById={}; (res[1]||[]).forEach(function(n){noticeById[n.id]=n;});
+    planByCase={}; (res[2]||[]).forEach(function(p){planByCase[p.case_id]=p;});
+    allInts=res[3]||[]; intByCase={}; allInts.forEach(function(i){(intByCase[i.case_id]=intByCase[i.case_id]||[]).push(i);});
+    // documents (no taxpayer_id on the table) — fetch by the current case ids
+    var ids=cases.map(function(c){return c.id;});
+    var dp=ids.length?fetch(SUPA+"/rest/v1/irs_case_documents?case_id=in.("+ids.join(",")+")&select=*",{headers:H}).then(function(r){return r.json();}):Promise.resolve([]);
+    dp.then(function(docs){
+      docsByCase={}; (docs||[]).forEach(function(d){(docsByCase[d.case_id]=docsByCase[d.case_id]||[]).push(d);});
+      if(!autoExpanded && cases.length && engagedNow()){ expanded[cases[0].id]=true; autoExpanded=true; }
+      renderHeader(); renderMatters();
+      if(me.chat_enabled) initChat();
+    });
+  }).catch(function(){ if(!cases.length) document.getElementById("reqs").innerHTML='<div class="skel">Could not load your account.</div>'; });
+}
+
+function load(){
+  fetch(SUPA+"/rest/v1/irs_taxpayers?taxpayer_reference=eq."+encodeURIComponent(TAXPAYER_REF)+"&select=*",{headers:H})
+    .then(function(r){return r.json();}).then(function(m){
+      me=(m&&m[0])||{};
+      renderAcct(); loadKb(); refresh();
+      setInterval(refresh,5000);
+    }).catch(function(){document.getElementById("reqs").innerHTML='<div class="skel">Could not load your account.</div>';});
+}
+
+function initChat(){
+  if(window.TalkdeskChatSDK || chatReady) return;
+  var node="tdWebchat";
+  var div=document.createElement("div"); div.id=node;
+  document.getElementById("chatBody").appendChild(div);
+  var s=document.createElement("script"); s.type="text/javascript"; s.charset="UTF-8"; s.id="tdwebchatscript";
+  s.src="https://talkdeskchatsdk.talkdeskapp.com/v2/talkdeskchatsdk.js"; s.async=true;
+  var first=document.getElementsByTagName("script")[0]; first.parentNode.insertBefore(s,first);
+  s.onload=function(){
+    try{
+      window.webchat=TalkdeskChatSDK(node,{touchpointId:(me.chat_touchpoint_id||TP_FALLBACK),accountId:"",region:"td-us-1"});
+      webchat.init({enableValidation:false,enableEmoji:true,enableUserInput:true,enableAttachments:true});
+      function setCtx(){try{webchat.setContextParam({"td_contact_person_identification":me.email,taxpayer_reference:me.taxpayer_reference,taxpayer_id:me.id,full_name:(me.first_name||"")+" "+(me.last_name||"")});}catch(e){}}
+      webchat.onConversationStart=setCtx; webchat.onOpenWebchat=setCtx;
+      chatReady=true;
+    }catch(e){}
+  };
+}
+function openChat(){
+  document.getElementById("chatView").classList.add("open");
+  if(me&&me.chat_enabled) initChat();
+  var tries=0;
+  (function go(){
+    try{ if(window.webchat&&webchat.openWebchat){webchat.openWebchat();return;} if(window.webchat&&webchat.open){webchat.open();return;} }catch(e){}
+    if(tries++<40) setTimeout(go,150);
+  })();
+}
+function closeChat(){
+  document.getElementById("chatView").classList.remove("open");
+  try{ if(window.webchat&&webchat.closeWebchat) webchat.closeWebchat(); }catch(e){}
+}
+
+load();
+</script>
+</body>
+</html>
