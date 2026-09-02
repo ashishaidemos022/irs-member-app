@@ -148,6 +148,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Ar
 .notice .nmain{min-width:0}
 .notice .np{color:var(--muted);font-size:13px;line-height:1.5;margin-top:5px}
 .notice .nbtn{margin-top:14px;background:var(--accent);color:#fff}
+.refund{padding:16px}
+.rf-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.rf-yr{font-size:12px;color:var(--muted)}
+.rf-amt{font-size:26px;font-weight:800;color:var(--navy);margin-top:2px;letter-spacing:-.3px}
+.rf-pill{font-size:11px;font-weight:700;color:#8A560F;background:#FEF3D7;padding:4px 10px;border-radius:999px;white-space:nowrap}
+.rf-track{display:flex;align-items:flex-start;margin:18px 2px 2px}
+.rf-step{display:flex;flex-direction:column;align-items:center;gap:7px;flex:0 0 auto;width:72px;text-align:center}
+.rf-dot{width:20px;height:20px;border-radius:50%;background:#d6deec;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff}
+.rf-step.done .rf-dot{background:var(--accent)}
+.rf-lbl{font-size:10px;color:var(--muted);line-height:1.25}
+.rf-step.done .rf-lbl{color:var(--ink);font-weight:600}
+.rf-bar{flex:1 1 auto;height:2px;background:#d6deec;margin-top:9px}
+.rf-note{font-size:13px;color:var(--ink);margin-top:12px}
+.rf-btn{margin-top:14px;background:var(--accent);color:#fff}
+/* nudge the embedded webchat toward the IRS look (final colors set in Talkdesk webchat appearance) */
+#tdWebchat, #tdWebchat *{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important}
 </style>
 </head>
 <body>
@@ -167,6 +183,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Ar
       <div class="sub" id="subline">Your federal tax account</div>
     </div>
     <div class="wrap">
+      <div id="refundArea"></div>
       <div class="h" id="mattersH">Your open matters</div>
       <div id="reqs"><div class="skel">Loading your account…</div></div>
 
@@ -241,7 +258,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Ar
 <script>
 var SUPA="https://mnrseaapxpofdznnqrsv.supabase.co";
 var ANON="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1ucnNlYWFweHBvZmR6bm5xcnN2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI1MjIyNzUsImV4cCI6MjA2ODA5ODI3NX0.TgUoEQKHbasSkk9b7gDXRsQTPY5m6COOSFRlO8h-Xe0";
-var TP_FALLBACK="3a0bf987389f4098a6da8a5d45dee737";       // Talkdesk chat touchpoint (swap for the IRS touchpoint)
+var TP_FALLBACK="8787bc1f73d24f298aff45b8fe4d2172";       // IRS refund-chat touchpoint
 var TAXPAYER_REF="IRS-DEMO-4827";
 var H={apikey:ANON,Authorization:"Bearer "+ANON};
 var me=null, chatReady=false;
@@ -309,6 +326,26 @@ function timeline(list){
 }
 function toggleCase(id){expanded[id]=!expanded[id];renderCases();}
 
+function renderRefund(){
+  var el=document.getElementById("refundArea"); if(!el) return;
+  var rn=null; for(var k in noticeById){ if(Number(noticeById[k].refund_amount||0)>0){rn=noticeById[k];break;} }
+  if(!rn){ el.innerHTML=''; return; }
+  el.innerHTML='<div class="h">Your refund</div>'+
+    '<div class="card refund">'+
+      '<div class="rf-top"><div><div class="rf-yr">'+esc(rn.tax_year||'')+' federal refund</div>'+
+        '<div class="rf-amt">'+money(rn.refund_amount)+'</div></div>'+
+        '<span class="rf-pill">Not yet posted</span></div>'+
+      '<div class="rf-track">'+
+        '<div class="rf-step done"><span class="rf-dot">\u2713</span><span class="rf-lbl">Return received</span></div>'+
+        '<div class="rf-bar"></div>'+
+        '<div class="rf-step"><span class="rf-dot"></span><span class="rf-lbl">Refund approved</span></div>'+
+        '<div class="rf-bar"></div>'+
+        '<div class="rf-step"><span class="rf-dot"></span><span class="rf-lbl">Refund sent</span></div>'+
+      '</div>'+
+      '<div class="rf-note">Your refund hasn\u2019t been posted to your account yet.</div>'+
+      '<button class="btn rf-btn" onclick="openChat()">Ask about your refund</button>'+
+    '</div>';
+}
 function renderMatters(){
   var h=document.getElementById("mattersH");
   if(engagedNow()){ if(h) h.textContent="Your open matters"; renderCases(); }
@@ -412,7 +449,7 @@ function refresh(){
     dp.then(function(docs){
       docsByCase={}; (docs||[]).forEach(function(d){(docsByCase[d.case_id]=docsByCase[d.case_id]||[]).push(d);});
       if(!autoExpanded && cases.length && engagedNow()){ expanded[cases[0].id]=true; autoExpanded=true; }
-      renderHeader(); renderMatters();
+      renderHeader(); renderRefund(); renderMatters();
       if(me.chat_enabled) initChat();
     });
   }).catch(function(){ if(!cases.length) document.getElementById("reqs").innerHTML='<div class="skel">Could not load your account.</div>'; });
